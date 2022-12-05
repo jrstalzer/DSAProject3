@@ -10,11 +10,17 @@
 using namespace std;
 
 int main() {
-    clock_t runTime;
+    clock_t runTime = clock();
     ifstream reviewFile("amazon_reviews.csv");
     set<string> categories;
     Hash table;
+    int choice;
+    cout << "What data structure would you like to use today?" << endl;
+    cout << "1. Hash Table" << endl << "2. 5-ary tree" << endl;
+    cin >> choice;
+    clock_t insertTime;
     if (reviewFile.is_open()) {
+        runTime = clock();
         string line;
         getline(reviewFile, line);
 
@@ -46,7 +52,15 @@ int main() {
 
             categories.insert(category); // this was used to test data reading
             //add insert method calls here
-            table.UpdateCategory(category, name, rating);
+            switch (choice) {
+            case 1:
+                table.UpdateCategory(category, name, rating);
+                insertTime = clock() - runTime;
+                break;
+            case 2:
+                //insert table insert
+                int insertTime = clock() - runTime;
+            }
         }
 
     }
@@ -54,10 +68,7 @@ int main() {
         cout << "error reading file :(" << endl;
     }
     //now that data is in structures, which structure do we use?
-    int choice;
-    cout << "What data structure would you like to use today?" << endl;
-    cout << "1. Hash Table" << endl << "2. 5-ary tree" << endl;
-    cin >> choice;
+
     cout << "Please select the category number you would like to search" << endl;
     int i = 1;
     for (auto iter = categories.begin(); iter != categories.end(); iter++) {
@@ -83,17 +94,18 @@ int main() {
         //search functions
         table.PrintHighestLowestForCategory(searchFor);
         runTime = clock() - runTime;
-        cout << "It took a hash table " << runTime / CLOCKS_PER_SEC << " seconds to run!" << endl;
+        cout << "It took a hash table " << (float)runTime / CLOCKS_PER_SEC << " seconds to search and " << (float)insertTime / CLOCKS_PER_SEC << " seconds to insert!" << endl;
         break;
     case 2:
         //5-ary
         runTime = clock(); //start of searching
         //search functions
         runTime = clock() - runTime;
-        cout << "It took a 5-ary " << runTime / CLOCKS_PER_SEC << " seconds to run!" << endl;
+        cout << "It took a 5-ary tree " << (float)runTime / CLOCKS_PER_SEC << " seconds to search and " << (float)insertTime / CLOCKS_PER_SEC << " seconds to insert!" << endl;
         break;
     }
 
 
     return 0;
 }
+
