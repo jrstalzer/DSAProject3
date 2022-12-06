@@ -18,21 +18,21 @@ private:
 			int numRatings = 0;
 			double sumRatings = 0;
 			double avgRating = 0;
-			Item()
+			Item() // O(1)
 			{
 				name = "";
 				numRatings = 0;
 				sumRatings = 0;
 				avgRating = 0;
 			}
-			Item(string n, double r)
+			Item(string n, double r) // O(1)
 			{
 				name = n;
 				numRatings++;
 				sumRatings += r;
 				avgRating = sumRatings / numRatings;
 			}
-			void AddRating(double r)
+			void AddRating(double r) // O(1)
 			{
 				numRatings++;
 				sumRatings += r;
@@ -46,12 +46,12 @@ private:
 		Node* third = nullptr;
 		Node* fourth = nullptr;
 		Node* fifth = nullptr;
-		Node(string c, string n, double r)
+		Node(string c, string n, double r) // O(1)
 		{
 			category = c;
 			items[n] = Item(n, r);
 		}
-		~Node()
+		~Node() // O(1)
 		{
 			first = nullptr;
 			second = nullptr;
@@ -59,22 +59,11 @@ private:
 			fourth = nullptr;
 			fifth = nullptr;
 		}
-		void AddItem(string n, double r)
+		void AddItem(string n, double r) // O(1)
 		{
 			items[n] = Item(n, r);
 		}
-		bool ItemExists(string n) // O(t)
-		{
-			for (auto iter = items.begin(); iter != items.end(); iter++)
-			{
-				if (n == iter->first)
-				{
-					return true;
-				}
-			}
-			return false;
-		}
-		void AddRatingToExistingItem(string n, double r)
+		void AddRatingToExistingItem(string n, double r) // O(1)
 		{
 			items[n].AddRating(r);
 		}
@@ -125,17 +114,18 @@ public:
 
 #endif
 
-FiveAryTree::FiveAryTree()
+FiveAryTree::FiveAryTree() // O(1)
 {
 	root = nullptr;
 }
 
-FiveAryTree::~FiveAryTree()
+FiveAryTree::~FiveAryTree() // O(g)
 {
 	HelpDestructor(this->root);
 	this->root = nullptr;
 }
-void FiveAryTree::HelpDestructor(Node* _root)
+
+void FiveAryTree::HelpDestructor(Node* _root) // O(g)
 {
 	if (_root == nullptr)
 	{
@@ -154,7 +144,7 @@ void FiveAryTree::HelpDestructor(Node* _root)
 
 void FiveAryTree::Insert(string category, string name, double rating) // O((g^2)logt)
 {
-	if (categoryNames.find(category) != categoryNames.end()) // O((g^2)t) + O(logg)
+	if (categoryNames.find(category) != categoryNames.end()) // O(g(logt)(logg)) + O(g)
 	{
 		this->root = HelpInsertItemAndRating(this->root, category, name, rating); // O(glogt)
 		return;
@@ -440,7 +430,7 @@ FiveAryTree::Node* FiveAryTree::HelpInsert(Node* _root, string c, string n, doub
 	}
 }
 
-map<string, pair<string, double>> FiveAryTree::HighAndLowRated(string category) // O(2g2t)
+map<string, pair<string, double>> FiveAryTree::HighAndLowRated(string category) // O(gt)
 {
 	map<string, pair<string, double>> retVal{};
 	retVal = HighestAndLowestRatedItem(this->root, category);
