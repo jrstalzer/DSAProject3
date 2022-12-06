@@ -113,7 +113,6 @@ private:
 	Node* HelpInsert(Node* _root, string c, string n, double r);
 	Node* HelpInsertItemAndRating(Node* _root, string c, string n, double r);
 	map<string, pair<string, double>> HighestAndLowestRatedItem(Node* _root, string c);
-	pair<string, double> LowestRatedItem(Node* _root, string c);
 	void HelpDestructor(Node* _root);
 
 public:
@@ -580,109 +579,6 @@ map<string, pair<string, double>> FiveAryTree::HighestAndLowestRatedItem(Node* _
 			return retVal;
 		}
 		retVal = HighestAndLowestRatedItem(_root->fifth, c);
-		return retVal;
-	}
-}
-
-pair<string, double> FiveAryTree::LowestRatedItem(Node* _root, string c) // O(gt)
-{
-	string name = "";
-	if (_root == nullptr)
-	{
-		return make_pair("", 0);
-	}
-	else
-	{
-		if (_root->category == c)
-		{
-			name = _root->LowestRatedInd(); // O(t)
-			return make_pair(_root->items[name].name, _root->items[name].avgRating);
-		}
-	}
-	if (_root->first == nullptr)
-	{
-		return make_pair("", 0);
-	}
-	else
-	{
-		if (_root->first->category == c)
-		{
-			name = _root->first->LowestRatedInd();
-			return make_pair(_root->first->items[name].name, _root->first->items[name].avgRating);
-		}
-	}
-	if (_root->second == nullptr)
-	{
-		return make_pair("", 0);
-	}
-	else
-	{
-		if (_root->second->category == c)
-		{
-			name = _root->second->LowestRatedInd();
-			return make_pair(_root->second->items[name].name, _root->second->items[name].avgRating);
-		}
-	}
-	if (_root->third == nullptr)
-	{
-		return make_pair("", 0);
-	}
-	else
-	{
-		if (_root->third->category == c)
-		{
-			name = _root->third->LowestRatedInd();
-			return make_pair(_root->third->items[name].name, _root->third->items[name].avgRating);
-		}
-	}
-	if (_root->fourth == nullptr)
-	{
-		return make_pair("", 0);
-	}
-	else
-	{
-		if (_root->fourth->category == c)
-		{
-			name = _root->fourth->LowestRatedInd();
-			return make_pair(_root->fourth->items[name].name, _root->fourth->items[name].avgRating);
-		}
-	}
-	if (_root->fifth == nullptr)
-	{
-		return make_pair("", 0);
-	}
-	else
-	{
-		if (_root->fifth->category == c)
-		{
-			name = _root->fifth->LowestRatedInd();
-			return make_pair(_root->fifth->items[name].name, _root->fifth->items[name].avgRating);
-		}
-	}
-	if (_root->fifth != nullptr)
-	{
-		pair<string, double> retVal{};
-		retVal = LowestRatedItem(_root->first, c);
-		if (retVal.first != "")
-		{
-			return retVal;
-		}
-		retVal = LowestRatedItem(_root->second, c);
-		if (retVal.first != "")
-		{
-			return retVal;
-		}
-		retVal = LowestRatedItem(_root->third, c);
-		if (retVal.first != "")
-		{
-			return retVal;
-		}
-		retVal = LowestRatedItem(_root->fourth, c);
-		if (retVal.first != "")
-		{
-			return retVal;
-		}
-		retVal = LowestRatedItem(_root->fifth, c);
 		return retVal;
 	}
 }
