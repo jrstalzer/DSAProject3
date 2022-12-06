@@ -62,7 +62,7 @@ private:
 		{
 			items[n] = Item(n, r);
 		}
-		bool ItemExists(string n)
+		bool ItemExists(string n) // O(t)
 		{
 			for (auto iter = items.begin(); iter != items.end(); iter++)
 			{
@@ -77,7 +77,7 @@ private:
 		{
 			items[n].AddRating(r);
 		}
-		string HighestRatedInd()
+		string HighestRatedInd() // O(t)
 		{
 			double high = 0;
 			string retVal = "";
@@ -91,7 +91,7 @@ private:
 			}
 			return retVal;
 		}
-		string LowestRatedInd()
+		string LowestRatedInd() // O(t)
 		{
 			double low = 5.1;
 			string retVal = "";
@@ -111,9 +111,8 @@ private:
 	vector<string> itemNames{};
 	vector<string> categoryNames{};
 	Node* HelpInsert(Node* _root, string c, string n, double r);
-	Node* HelpInsertRating(Node* _root, string c, string n, double r);
-	Node* HelpInsertItem(Node* _root, string c, string n, double r);
-	pair<string, double> HighestRatedItem(Node* _root, string c);
+	Node* HelpInsertItemAndRating(Node* _root, string c, string n, double r);
+	map<string, pair<string, double>> HighestAndLowestRatedItem(Node* _root, string c);
 	pair<string, double> LowestRatedItem(Node* _root, string c);
 	void HelpDestructor(Node* _root);
 
@@ -121,7 +120,6 @@ public:
 	FiveAryTree();
 	~FiveAryTree();
 	void Insert(string category, string name, double rating);
-	bool ItemExists(string n);
 	bool CategoryExists(string c);
 	map<string, pair<string, double>> HighAndLowRated(string category);
 };
@@ -155,19 +153,8 @@ void FiveAryTree::HelpDestructor(Node* _root)
 	}
 }
 
-bool FiveAryTree::ItemExists(string n)
-{
-	for (int i = 0; i < itemNames.size(); i++)
-	{
-		if (n == itemNames[i])
-		{
-			return true;
-		}
-	}
-	return false;
-}
-
-bool FiveAryTree::CategoryExists(string c)
+				  
+bool FiveAryTree::CategoryExists(string c)  // O(g) g = # of categories
 {
 	for (int i = 0; i < categoryNames.size(); i++)
 	{
@@ -179,22 +166,17 @@ bool FiveAryTree::CategoryExists(string c)
 	return false;
 }
 
-void FiveAryTree::Insert(string category, string name, double rating)
+void FiveAryTree::Insert(string category, string name, double rating) // O((g^2)logt)
 {
-	if (ItemExists(name))
+	if (CategoryExists(category)) // O((g^2)t) + O(g)
 	{
-		this->root = HelpInsertRating(this->root, category, name, rating);
+		this->root = HelpInsertItemAndRating(this->root, category, name, rating); // O(glogt)
 		return;
 	}
-	if (CategoryExists(category))
-	{
-		this->root = HelpInsertItem(this->root, category, name, rating);
-		return;
-	}
-	this->root = HelpInsert(this->root, category, name, rating);
+	this->root = HelpInsert(this->root, category, name, rating);  // O(g)
 }
 
-FiveAryTree::Node* FiveAryTree::HelpInsertRating(Node* _root, string c, string n, double r)
+FiveAryTree::Node* FiveAryTree::HelpInsertItemAndRating(Node* _root, string c, string n, double r) // O(glogt)
 {
 	if (_root == nullptr)
 	{
@@ -204,7 +186,12 @@ FiveAryTree::Node* FiveAryTree::HelpInsertRating(Node* _root, string c, string n
 	{
 		if (_root->category == c)
 		{
-			if (_root->ItemExists(n))
+			if (!(_root->items.find(n) != _root->items.end())) // O(logt), t = # of items in a given category
+			{
+				_root->AddItem(n, r);
+				itemNames.push_back(n);
+			}
+			else
 			{
 				_root->AddRatingToExistingItem(n, r);
 			}
@@ -219,7 +206,12 @@ FiveAryTree::Node* FiveAryTree::HelpInsertRating(Node* _root, string c, string n
 	{
 		if (_root->first->category == c)
 		{
-			if (_root->first->ItemExists(n))
+			if (!(_root->first->items.find(n) != _root->first->items.end()))
+			{
+				_root->first->AddItem(n, r);
+				itemNames.push_back(n);
+			}
+			else
 			{
 				_root->first->AddRatingToExistingItem(n, r);
 			}
@@ -234,7 +226,12 @@ FiveAryTree::Node* FiveAryTree::HelpInsertRating(Node* _root, string c, string n
 	{
 		if (_root->second->category == c)
 		{
-			if (_root->second->ItemExists(n))
+			if (!(_root->second->items.find(n) != _root->second->items.end()))
+			{
+				_root->second->AddItem(n, r);
+				itemNames.push_back(n);
+			}
+			else
 			{
 				_root->second->AddRatingToExistingItem(n, r);
 			}
@@ -249,7 +246,12 @@ FiveAryTree::Node* FiveAryTree::HelpInsertRating(Node* _root, string c, string n
 	{
 		if (_root->third->category == c)
 		{
-			if (_root->third->ItemExists(n))
+			if (!(_root->third->items.find(n) != _root->third->items.end()))
+			{
+				_root->third->AddItem(n, r);
+				itemNames.push_back(n);
+			}
+			else
 			{
 				_root->third->AddRatingToExistingItem(n, r);
 			}
@@ -264,7 +266,12 @@ FiveAryTree::Node* FiveAryTree::HelpInsertRating(Node* _root, string c, string n
 	{
 		if (_root->fourth->category == c)
 		{
-			if (_root->fourth->ItemExists(n))
+			if (!(_root->fourth->items.find(n) != _root->fourth->items.end()))
+			{
+				_root->fourth->AddItem(n, r);
+				itemNames.push_back(n);
+			}
+			else
 			{
 				_root->fourth->AddRatingToExistingItem(n, r);
 			}
@@ -279,7 +286,12 @@ FiveAryTree::Node* FiveAryTree::HelpInsertRating(Node* _root, string c, string n
 	{
 		if (_root->fifth->category == c)
 		{
-			if (_root->fifth->ItemExists(n))
+			if (!(_root->fifth->items.find(n) != _root->fifth->items.end()))
+			{
+				_root->fifth->AddItem(n, r);
+				itemNames.push_back(n);
+			}
+			else
 			{
 				_root->fifth->AddRatingToExistingItem(n, r);
 			}
@@ -288,125 +300,16 @@ FiveAryTree::Node* FiveAryTree::HelpInsertRating(Node* _root, string c, string n
 	}
 	if (_root->fifth != nullptr)
 	{
-		_root->first = HelpInsertRating(_root->first, c, n, r);
-		_root->second = HelpInsertRating(_root->second, c, n, r);
-		_root->third = HelpInsertRating(_root->third, c, n, r);
-		_root->fourth = HelpInsertRating(_root->fourth, c, n, r);
-		_root->fifth = HelpInsertRating(_root->fifth, c, n, r);
+		_root->first = HelpInsertItemAndRating(_root->first, c, n, r);
+		_root->second = HelpInsertItemAndRating(_root->second, c, n, r);
+		_root->third = HelpInsertItemAndRating(_root->third, c, n, r);
+		_root->fourth = HelpInsertItemAndRating(_root->fourth, c, n, r);
+		_root->fifth = HelpInsertItemAndRating(_root->fifth, c, n, r);
 		return _root;
 	}
 }
 
-FiveAryTree::Node* FiveAryTree::HelpInsertItem(Node* _root, string c, string n, double r)
-{
-	if (_root == nullptr)
-	{
-		return _root;
-	}
-	else
-	{
-		if (_root->category == c)
-		{
-			if (!_root->ItemExists(n))
-			{
-				_root->AddItem(n, r);
-				itemNames.push_back(n);
-			}
-			return _root;
-		}
-	}
-	if (_root->first == nullptr)
-	{
-		return _root;
-	}
-	else
-	{
-		if (_root->first->category == c)
-		{
-			if (!_root->first->ItemExists(n))
-			{
-				_root->first->AddItem(n, r);
-				itemNames.push_back(n);
-			}
-			return _root;
-		}
-	}
-	if (_root->second == nullptr)
-	{
-		return _root;
-	}
-	else
-	{
-		if (_root->second->category == c)
-		{
-			if (!_root->second->ItemExists(n))
-			{
-				_root->second->AddItem(n, r);
-				itemNames.push_back(n);
-			}
-			return _root;
-		}
-	}
-	if (_root->third == nullptr)
-	{
-		return _root;
-	}
-	else
-	{
-		if (_root->third->category == c)
-		{
-			if (!_root->third->ItemExists(n))
-			{
-				_root->third->AddItem(n, r);
-				itemNames.push_back(n);
-			}
-			return _root;
-		}
-	}
-	if (_root->fourth == nullptr)
-	{
-		return _root;
-	}
-	else
-	{
-		if (_root->fourth->category == c)
-		{
-			if (!_root->fourth->ItemExists(n))
-			{
-				_root->fourth->AddItem(n, r);
-				itemNames.push_back(n);
-			}
-			return _root;
-		}
-	}
-	if (_root->fifth == nullptr)
-	{
-		return _root;
-	}
-	else
-	{
-		if (_root->fifth->category == c)
-		{
-			if (!_root->fifth->ItemExists(n))
-			{
-				_root->fifth->AddItem(n, r);
-				itemNames.push_back(n);
-			}
-			return _root;
-		}
-	}
-	if (_root->fifth != nullptr)
-	{
-		_root->first = HelpInsertRating(_root->first, c, n, r);
-		_root->second = HelpInsertRating(_root->second, c, n, r);
-		_root->third = HelpInsertRating(_root->third, c, n, r);
-		_root->fourth = HelpInsertRating(_root->fourth, c, n, r);
-		_root->fifth = HelpInsertRating(_root->fifth, c, n, r);
-		return _root;
-	}
-}
-
-FiveAryTree::Node* FiveAryTree::HelpInsert(Node* _root, string c, string n, double r)
+FiveAryTree::Node* FiveAryTree::HelpInsert(Node* _root, string c, string n, double r) // O(g)
 {
 	if (_root == nullptr)
 	{
@@ -415,44 +318,12 @@ FiveAryTree::Node* FiveAryTree::HelpInsert(Node* _root, string c, string n, doub
 		itemNames.push_back(n);
 		return _root;
 	}
-	else
-	{
-		if (_root->category == c)
-		{
-			if (_root->ItemExists(n))
-			{
-				_root->AddRatingToExistingItem(n, r);
-			}
-			else
-			{
-				_root->AddItem(n, r);
-				itemNames.push_back(n);
-			}
-			return _root;
-		}
-	}
 	if (_root->first == nullptr)
 	{
 		_root->first = new Node(c, n, r);
 		categoryNames.push_back(c);
 		itemNames.push_back(n);
 		return _root;
-	}
-	else
-	{
-		if (_root->first->category == c)
-		{
-			if (_root->first->ItemExists(n))
-			{
-				_root->first->AddRatingToExistingItem(n, r);
-			}
-			else
-			{
-				_root->first->AddItem(n, r);
-				itemNames.push_back(n);
-			}
-			return _root;
-		}
 	}
 	if (_root->second == nullptr)
 	{
@@ -461,44 +332,12 @@ FiveAryTree::Node* FiveAryTree::HelpInsert(Node* _root, string c, string n, doub
 		itemNames.push_back(n);
 		return _root;
 	}
-	else
-	{
-		if (_root->second->category == c)
-		{
-			if (_root->second->ItemExists(n))
-			{
-				_root->second->AddRatingToExistingItem(n, r);
-			}
-			else
-			{
-				_root->second->AddItem(n, r);
-				itemNames.push_back(n);
-			}
-			return _root;
-		}
-	}
 	if (_root->third == nullptr)
 	{
 		_root->third = new Node(c, n, r);
 		categoryNames.push_back(c);
 		itemNames.push_back(n);
 		return _root;
-	}
-	else
-	{
-		if (_root->third->category == c)
-		{
-			if (_root->third->ItemExists(n))
-			{
-				_root->third->AddRatingToExistingItem(n, r);
-			}
-			else
-			{
-				_root->third->AddItem(n, r);
-				itemNames.push_back(n);
-			}
-			return _root;
-		}
 	}
 	if (_root->fourth == nullptr)
 	{
@@ -507,44 +346,12 @@ FiveAryTree::Node* FiveAryTree::HelpInsert(Node* _root, string c, string n, doub
 		itemNames.push_back(n);
 		return _root;
 	}
-	else
-	{
-		if (_root->fourth->category == c)
-		{
-			if (_root->fourth->ItemExists(n))
-			{
-				_root->fourth->AddRatingToExistingItem(n, r);
-			}
-			else
-			{
-				_root->fourth->AddItem(n, r);
-				itemNames.push_back(n);
-			}
-			return _root;
-		}
-	}
 	if (_root->fifth == nullptr)
 	{
 		_root->fifth = new Node(c, n, r);
 		categoryNames.push_back(c);
 		itemNames.push_back(n);
 		return _root;
-	}
-	else
-	{
-		if (_root->fifth->category == c)
-		{
-			if (_root->fifth->ItemExists(n))
-			{
-				_root->fifth->AddRatingToExistingItem(n, r);
-			}
-			else
-			{
-				_root->fifth->AddItem(n, r);
-				itemNames.push_back(n);
-			}
-			return _root;
-		}
 	}
 	if (_root->fifth != nullptr)
 	{
@@ -647,102 +454,137 @@ FiveAryTree::Node* FiveAryTree::HelpInsert(Node* _root, string c, string n, doub
 	}
 }
 
-map<string, pair<string, double>> FiveAryTree::HighAndLowRated(string category)
+map<string, pair<string, double>> FiveAryTree::HighAndLowRated(string category) // O(2g2t)
 {
 	map<string, pair<string, double>> retVal{};
-	retVal["Max"] = HighestRatedItem(this->root, category);
-	retVal["Min"] = LowestRatedItem(this->root, category);
+	retVal = HighestAndLowestRatedItem(this->root, category);
 	return retVal;
 }
 
-pair<string, double> FiveAryTree::HighestRatedItem(Node* _root, string c)
+map<string, pair<string, double>> FiveAryTree::HighestAndLowestRatedItem(Node* _root, string c) // O(gt)
 {
-	string name = "";
+	string nameMax = "";
+	string nameMin = "";
+	map<string, pair<string, double>> minMax{};
 	if (_root == nullptr)
 	{
-		return make_pair("", 0);
+		return {};
 	}
 	else
 	{
 		if (_root->category == c)
 		{
-			name = _root->HighestRatedInd();
-			return make_pair(_root->items[name].name, _root->items[name].avgRating);
+			nameMax = _root->HighestRatedInd(); // O(t)
+			nameMin = _root->LowestRatedInd();
+			minMax["Max"] = make_pair(_root->items[nameMax].name, _root->items[nameMax].avgRating);
+			minMax["Min"] = make_pair(_root->items[nameMin].name, _root->items[nameMin].avgRating);
+			return minMax;
 		}
 	}
 	if (_root->first == nullptr)
 	{
-		return make_pair("", 0);
+		return {};
 	}
 	else
 	{
 		if (_root->first->category == c)
 		{
-			name = _root->first->HighestRatedInd();
-			return make_pair(_root->first->items[name].name, _root->first->items[name].avgRating);
+			nameMax = _root->first->HighestRatedInd();
+			nameMin = _root->first->LowestRatedInd();
+			minMax["Max"] = make_pair(_root->first->items[nameMax].name, _root->first->items[nameMax].avgRating);
+			minMax["Min"] = make_pair(_root->first->items[nameMin].name, _root->first->items[nameMin].avgRating);
+			return minMax;
 		}
 	}
 	if (_root->second == nullptr)
 	{
-		return make_pair("", 0);
+		return {};
 	}
 	else
 	{
 		if (_root->second->category == c)
 		{
-			name = _root->second->HighestRatedInd();
-			return make_pair(_root->second->items[name].name, _root->second->items[name].avgRating);
+			nameMax = _root->second->HighestRatedInd();
+			nameMin = _root->second->LowestRatedInd();
+			minMax["Max"] = make_pair(_root->second->items[nameMax].name, _root->second->items[nameMax].avgRating);
+			minMax["Min"] = make_pair(_root->second->items[nameMin].name, _root->second->items[nameMin].avgRating);
+			return minMax;
 		}
 	}
 	if (_root->third == nullptr)
 	{
-		return make_pair("", 0);
+		return {};
 	}
 	else
 	{
 		if (_root->third->category == c)
 		{
-			name = _root->third->HighestRatedInd();
-			return make_pair(_root->third->items[name].name, _root->third->items[name].avgRating);
+			nameMax = _root->third->HighestRatedInd();
+			nameMin = _root->third->LowestRatedInd();
+			minMax["Max"] = make_pair(_root->third->items[nameMax].name, _root->third->items[nameMax].avgRating);
+			minMax["Min"] = make_pair(_root->third->items[nameMin].name, _root->third->items[nameMin].avgRating);
+			return minMax;
 		}
 	}
 	if (_root->fourth == nullptr)
 	{
-		return make_pair("", 0);
+		return {};
 	}
 	else
 	{
 		if (_root->fourth->category == c)
 		{
-			name = _root->fourth->HighestRatedInd();
-			return make_pair(_root->fourth->items[name].name, _root->fourth->items[name].avgRating);
+			nameMax = _root->fourth->HighestRatedInd();
+			nameMin = _root->fourth->LowestRatedInd();
+			minMax["Max"] = make_pair(_root->fourth->items[nameMax].name, _root->fourth->items[nameMax].avgRating);
+			minMax["Min"] = make_pair(_root->fourth->items[nameMin].name, _root->fourth->items[nameMin].avgRating);
+			return minMax;
 		}
 	}
 	if (_root->fifth == nullptr)
 	{
-		return make_pair("", 0);
+		return {};
 	}
 	else
 	{
 		if (_root->fifth->category == c)
 		{
-			name = _root->fifth->HighestRatedInd();
-			return make_pair(_root->fifth->items[name].name, _root->fifth->items[name].avgRating);
+			nameMax = _root->fifth->HighestRatedInd();
+			nameMin = _root->fifth->LowestRatedInd();
+			minMax["Max"] = make_pair(_root->fifth->items[nameMax].name, _root->fifth->items[nameMax].avgRating);
+			minMax["Min"] = make_pair(_root->fifth->items[nameMin].name, _root->fifth->items[nameMin].avgRating);
+			return minMax;
 		}
 	}
 	if (_root->fifth != nullptr)
 	{
-		pair<string, double> retVal{};
-		retVal = HighestRatedItem(_root->first, c);
-		retVal = HighestRatedItem(_root->second, c);
-		retVal = HighestRatedItem(_root->third, c);
-		retVal = HighestRatedItem(_root->fourth, c);
-		retVal = HighestRatedItem(_root->fifth, c);
+		map<string, pair<string, double>> retVal{};
+		retVal = HighestAndLowestRatedItem(_root->first, c);
+		if (!retVal.empty())
+		{
+			return retVal;
+		}
+		retVal = HighestAndLowestRatedItem(_root->second, c);
+		if (!retVal.empty())
+		{
+			return retVal;
+		}
+		retVal = HighestAndLowestRatedItem(_root->third, c);
+		if (!retVal.empty())
+		{
+			return retVal;
+		}
+		retVal = HighestAndLowestRatedItem(_root->fourth, c);
+		if (!retVal.empty())
+		{
+			return retVal;
+		}
+		retVal = HighestAndLowestRatedItem(_root->fifth, c);
 		return retVal;
 	}
 }
 
-pair<string, double> FiveAryTree::LowestRatedItem(Node* _root, string c)
+pair<string, double> FiveAryTree::LowestRatedItem(Node* _root, string c) // O(gt)
 {
 	string name = "";
 	if (_root == nullptr)
@@ -753,7 +595,7 @@ pair<string, double> FiveAryTree::LowestRatedItem(Node* _root, string c)
 	{
 		if (_root->category == c)
 		{
-			name = _root->LowestRatedInd();
+			name = _root->LowestRatedInd(); // O(t)
 			return make_pair(_root->items[name].name, _root->items[name].avgRating);
 		}
 	}
@@ -821,9 +663,25 @@ pair<string, double> FiveAryTree::LowestRatedItem(Node* _root, string c)
 	{
 		pair<string, double> retVal{};
 		retVal = LowestRatedItem(_root->first, c);
+		if (retVal.first != "")
+		{
+			return retVal;
+		}
 		retVal = LowestRatedItem(_root->second, c);
+		if (retVal.first != "")
+		{
+			return retVal;
+		}
 		retVal = LowestRatedItem(_root->third, c);
+		if (retVal.first != "")
+		{
+			return retVal;
+		}
 		retVal = LowestRatedItem(_root->fourth, c);
+		if (retVal.first != "")
+		{
+			return retVal;
+		}
 		retVal = LowestRatedItem(_root->fifth, c);
 		return retVal;
 	}
