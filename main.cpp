@@ -61,7 +61,7 @@ int main() {
                 break;
             case 2:
                 //insert table insert
-                tree.Insert(category, name, rating)
+                tree.Insert(category, name, rating);
                 int insertTime = clock() - runTime;
             }
         }
