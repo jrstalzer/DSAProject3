@@ -4,6 +4,7 @@
 #include <vector>
 #include <string>
 #include <map>
+#include <set>
 using namespace std;
 
 class FiveAryTree
@@ -109,7 +110,7 @@ private:
 
 	Node* root = nullptr;
 	vector<string> itemNames{};
-	vector<string> categoryNames{};
+	set<string> categoryNames{};
 	Node* HelpInsert(Node* _root, string c, string n, double r);
 	Node* HelpInsertItemAndRating(Node* _root, string c, string n, double r);
 	map<string, pair<string, double>> HighestAndLowestRatedItem(Node* _root, string c);
@@ -119,7 +120,6 @@ public:
 	FiveAryTree();
 	~FiveAryTree();
 	void Insert(string category, string name, double rating);
-	bool CategoryExists(string c);
 	map<string, pair<string, double>> HighAndLowRated(string category);
 };
 
@@ -152,22 +152,9 @@ void FiveAryTree::HelpDestructor(Node* _root)
 	}
 }
 
-				  
-bool FiveAryTree::CategoryExists(string c)  // O(g) g = # of categories
-{
-	for (int i = 0; i < categoryNames.size(); i++)
-	{
-		if (c == categoryNames[i])
-		{
-			return true;
-		}
-	}
-	return false;
-}
-
 void FiveAryTree::Insert(string category, string name, double rating) // O((g^2)logt)
 {
-	if (CategoryExists(category)) // O((g^2)t) + O(g)
+	if (categoryNames.find(category) != categoryNames.end()) // O((g^2)t) + O(logg)
 	{
 		this->root = HelpInsertItemAndRating(this->root, category, name, rating); // O(glogt)
 		return;
@@ -313,42 +300,42 @@ FiveAryTree::Node* FiveAryTree::HelpInsert(Node* _root, string c, string n, doub
 	if (_root == nullptr)
 	{
 		_root = new Node(c, n, r);
-		categoryNames.push_back(c);
+		categoryNames.insert(c);
 		itemNames.push_back(n);
 		return _root;
 	}
 	if (_root->first == nullptr)
 	{
 		_root->first = new Node(c, n, r);
-		categoryNames.push_back(c);
+		categoryNames.insert(c);
 		itemNames.push_back(n);
 		return _root;
 	}
 	if (_root->second == nullptr)
 	{
 		_root->second = new Node(c, n, r);
-		categoryNames.push_back(c);
+		categoryNames.insert(c);
 		itemNames.push_back(n);
 		return _root;
 	}
 	if (_root->third == nullptr)
 	{
 		_root->third = new Node(c, n, r);
-		categoryNames.push_back(c);
+		categoryNames.insert(c);
 		itemNames.push_back(n);
 		return _root;
 	}
 	if (_root->fourth == nullptr)
 	{
 		_root->fourth = new Node(c, n, r);
-		categoryNames.push_back(c);
+		categoryNames.insert(c);
 		itemNames.push_back(n);
 		return _root;
 	}
 	if (_root->fifth == nullptr)
 	{
 		_root->fifth = new Node(c, n, r);
-		categoryNames.push_back(c);
+		categoryNames.insert(c);
 		itemNames.push_back(n);
 		return _root;
 	}
