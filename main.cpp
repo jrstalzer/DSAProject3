@@ -15,10 +15,7 @@ int main() {
     ifstream reviewFile("amazon_reviews.csv");
     set<string> categories;
     Hash table;
-<<<<<<< HEAD
     FiveAryTree tree;
-=======
->>>>>>> eee3d41ba0d3736e9f482053e68e73b60955098a
     int choice;
     cout << "What data structure would you like to use today?" << endl;
     cout << "1. Hash Table" << endl << "2. 5-ary tree" << endl;
@@ -64,10 +61,7 @@ int main() {
                 break;
             case 2:
                 //insert table insert
-<<<<<<< HEAD
                 tree.Insert(category, name, rating)
-=======
->>>>>>> eee3d41ba0d3736e9f482053e68e73b60955098a
                 int insertTime = clock() - runTime;
             }
         }
@@ -112,11 +106,8 @@ int main() {
         //search functions
         items = tree.HighAndLowRated(searchFor);
         runTime = clock() - runTime;
-<<<<<<< HEAD
         cout << searchFor << "\n" << "Highest: " << items["Max"].first << ", Rating: " << items["Max"].second << "\n";
         cout << "Lowest: " << items["Min"].first << ", Rating: " << items["Min"].second << "\n";
-=======
->>>>>>> eee3d41ba0d3736e9f482053e68e73b60955098a
         cout << "It took a 5-ary tree " << (float)runTime / CLOCKS_PER_SEC << " seconds to search and " << (float)insertTime / CLOCKS_PER_SEC << " seconds to insert!" << endl;
         break;
     }
