@@ -13,10 +13,10 @@ using namespace std;
 int main() {
     clock_t runTime = clock();
     ifstream reviewFile("amazon_reviews.csv");
-    set<string> categories;
-    Hash table;
-    FiveAryTree tree;
-    int choice;
+    set<string> categories{};
+    Hash table{};
+    FiveAryTree tree{};
+    int choice = 0;
     cout << "What data structure would you like to use today?" << endl;
     cout << "1. Hash Table" << endl << "2. 5-ary tree" << endl;
     cin >> choice;
@@ -52,7 +52,7 @@ int main() {
                 rating = stod(tempRate);
             }
 
-            categories.insert(category); // this was used to test data reading
+            categories.insert(category);
             //add insert method calls here
             switch (choice) {
             case 1:
@@ -107,8 +107,8 @@ int main() {
         //search functions
         items = tree.HighAndLowRated(searchFor);
         runTime = clock() - runTime;
-        cout << searchFor << "\n" << "Highest: " << items["Max"].first << ", Rating: " << items["Max"].second << "\n";
-        cout << "Lowest: " << items["Min"].first << ", Rating: " << items["Min"].second << "\n";
+        cout << searchFor << "\n" << "Highest Rated Item: " << items["Max"].first << " | " << items["Max"].second << " Stars\n";
+        cout << "Lowest Rated Item: " << items["Min"].first << " | " << items["Min"].second << " Stars\n";
         cout << "It took a 5-ary tree " << (float)runTime / CLOCKS_PER_SEC << " seconds to search and " << (float)insertTime / CLOCKS_PER_SEC << " seconds to insert!" << endl;
         break;
     }
